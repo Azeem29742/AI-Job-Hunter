@@ -2,6 +2,21 @@
 
 An AI-powered job search and screening automation built with n8n, Google Sheets, and LLM-based job evaluation.
 
+
+## Project Screenshots
+
+### Create Your Job Profile
+
+![Create Your Job Profile](profile.png)
+
+### Job Search Dashboard
+
+![AI Job Hunter Dashboard](dashboard.png)
+
+### n8n Automation Workflow
+
+![n8n Workflow](workflow.png)
+
 ## Features
 
 - Multi-source job collection
@@ -68,3 +83,4 @@ AI-Job-Hunter/
 Azeem Ur Rehman
 
 Software Engineering Graduate | AI/ML | LLM Applications | RAG | AI Automation | n8n
+
