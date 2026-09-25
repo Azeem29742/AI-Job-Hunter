@@ -1,5 +1,17 @@
 # AI Job Hunter
 
+![n8n](https://img.shields.io/badge/n8n-EA4B71?style=for-the-badge&logo=n8n&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=for-the-badge&logo=googlesheets&logoColor=white)
+![REST API](https://img.shields.io/badge/REST%20API-005571?style=for-the-badge)
+![LLM](https://img.shields.io/badge/LLM-AI-blueviolet?style=for-the-badge)
+![Webhooks](https://img.shields.io/badge/Webhooks-FF6F00?style=for-the-badge)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+
+
 An AI-powered job search and screening automation built with n8n, Google Sheets, and LLM-based job evaluation.
 
 
@@ -83,4 +95,5 @@ AI-Job-Hunter/
 Azeem Ur Rehman
 
 Software Engineering Graduate | AI/ML | LLM Applications | RAG | AI Automation | n8n
+
 
