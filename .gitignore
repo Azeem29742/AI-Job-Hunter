@@ -1,0 +1,11 @@
+# n8n / secrets
+.env
+*.env
+credentials.json
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# ZIP archives
+*.zip

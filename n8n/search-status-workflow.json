@@ -1,0 +1,109 @@
+{
+  "name": "AI Job Hunter — Search Status",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "search-status",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "923a07fb-33c6-460b-927c-8b800db66846",
+      "name": "Webhook",
+      "webhookId": "[REDACTED]"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "[REDACTED]",
+          "mode": "list",
+          "cachedResultName": "AI Job Hunter – Search Status",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Status",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Search ID",
+              "lookupValue": "={{ $json.query.searchId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d4c32174-564f-453a-982e-d332572a68a2",
+      "name": "Get row(s) in sheet"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "deded42e-d089-4ce9-9191-6c65885ec039",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a53a50b8-ca68-4c80-bc51-55b1979dae99",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "da93af29bba3165bc3782f1a1b8e56fad8ee946d08d66e4b0fd48a0448fc3e6f"
+  },
+  "nodeGroups": [],
+  "id": "KgAYdLDUBT8wMEpM",
+  "tags": []
+}

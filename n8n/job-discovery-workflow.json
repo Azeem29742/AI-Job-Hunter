@@ -1,0 +1,1160 @@
+{
+  "name": "AI Job Hunter — Job Discovery",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -272,
+        128
+      ],
+      "id": "1f9cb8dd-864f-4033-ba7b-9a987ae7a1b0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://remotive.com/api/remote-jobs",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": []
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -160,
+        -144
+      ],
+      "id": "a253d867-ae62-439a-b76a-dd0c61077720",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        352,
+        128
+      ],
+      "id": "c768191e-b0cb-4d03-ae8d-d7db92d34255",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cba0c146-b15b-4fe2-bc67-75f2984ca5e2",
+              "leftValue": "={{\n  !/(senior|staff|principal|lead|manager|director|architect)/i.test($json.title || '')\n  &&\n  /(python|artificial intelligence|\\bai\\b|machine learning|\\bml\\b|llm|rag|generative ai|genai|software engineer|software developer|software engineering|developer|data|automation|backend|full[- ]stack|frontend|web developer|programmer|qa|testing|intern|internship|trainee|graduate|evaluator|trainer|annotation)/i.test(\n    (\n      ($json.title || '') + ' ' +\n      ($json.description || '') + ' ' +\n      JSON.stringify($json.tags || [])\n    ).replace(/<[^>]*>/g, ' ')\n  )\n}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        944,
+        128
+      ],
+      "id": "997c6735-5e8d-4957-bb25-4ebfdc26631d",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a job screening assistant.\n\nCANDIDATE PROFILE FROM USER:\nCountry: {{ $('Get row(s) in sheet').first().json['Country'] }}\nExperience: {{ $('Get row(s) in sheet').first().json['Experience'] }}\nSkills: {{ $('Get row(s) in sheet').first().json['Skills'] }}\nDesired Roles: {{ $('Get row(s) in sheet').first().json['Desired Roles'] }}\nWork Preference: {{ $('Get row(s) in sheet').first().json['Work Preference'] }}\n\nTASK:\nEvaluate whether the candidate can reasonably apply for this job.\n\nReturn ONLY one of:\nSUITABLE\nNOT SUITABLE\n\nSUITABLE when ALL relevant conditions are satisfied:\n- The role is entry-level, junior, internship, trainee, graduate, or otherwise suitable for a fresh graduate.\n- The candidate's Software Engineering, Python, AI/ML, LLM, RAG, or automation background is relevant.\n- The job does not require several years of professional experience as a hard requirement.\n- A Pakistan-based candidate is eligible to apply.\n- Pakistan-based on-site and hybrid jobs are allowed.\n- Remote jobs are allowed only when they explicitly accept Pakistan, worldwide applicants, or a location/region that includes Pakistan.\n\nNOT SUITABLE when ANY important condition applies:\n- Senior, staff, principal, lead, manager, director, architect, or similar experienced role.\n- Several years of professional experience are mandatory.\n- The role is unrelated to the candidate's background.\n- The job requires physical location in a country that excludes Pakistan.\n- A remote role explicitly restricts applicants to countries/regions that do not include Pakistan.\n- A mandatory qualification is clearly missing from the candidate profile.\n\nDo not reject a job merely because:\n- Experience is preferred rather than mandatory.\n- The candidate is a fresh graduate.\n- The job is freelance, contract, internship, trainee, evaluator, trainer, or data-related, if the other requirements are compatible.\n\nJOB:\nTitle: {{ $json.title }}\nCompany: {{ $json.company_name }}\nCategory: {{ $json.category || '' }}\nLocation: {{ $json.candidate_required_location || '' }}\nJob Type: {{ $json.job_type || '' }}\nTags: {{ JSON.stringify($json.tags) }}\nDescription: {{ $json.description.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').substring(0, 1500) }}",
+        "options": {
+          "systemMessage": "You are an AI Job Screening Assistant.\n\nDetermine whether a job is suitable for this candidate.\n\nCANDIDATE:\n- Bachelor's in Software Engineering\n- Fresh graduate / entry-level\n- Based in Pakistan\n- Python, AI/ML, LLMs, RAG, Generative AI, AI automation\n- Machine Learning internship\n- Software engineering fundamentals\n- Academic/personal AI and RAG projects\n- Currently developing LLM, RAG and AI automation skills\n- E-commerce and data-entry experience\n\nTARGET ROLES:\n- Entry-level, junior, graduate, trainee and internship roles\n- Freelance opportunities\n- AI evaluator, AI trainer and AI data roles\n- Junior Python, AI/ML and software engineering roles\n- Early-career LLM, RAG and Generative AI roles\n\nSCREENING RULES:\n\nMark SUITABLE when:\n- The role is reasonably relevant to the candidate's education or technical background.\n- The candidate can reasonably satisfy the mandatory requirements.\n- The role is suitable for an entry-level candidate.\n- 0–2 years experience is acceptable.\n- Experience is preferred/nice-to-have rather than mandatory.\n- The role is freelance, internship, trainee, evaluator, annotation, AI trainer or similar.\n- The role requires skills the candidate is currently developing, such as LLMs or RAG.\n- The job is remote and explicitly accepts Pakistan, worldwide applicants, or a region that includes Pakistan.\n\nDo NOT reject merely because:\n- The candidate is a fresh graduate.\n- The candidate lacks several years of professional experience when that experience is not mandatory.\n- The candidate does not know every listed technology.\n- A skill is preferred/nice-to-have.\n- The title does not contain \"AI\".\n\nMark NOT SUITABLE when:\n- Senior, Staff, Principal, Lead, Director, Manager or Architect role requiring substantial experience.\n- Several years of professional experience are explicitly mandatory and the candidate clearly does not meet it.\n- A mandatory degree/certification is missing.\n- Pakistan is explicitly excluded by the location requirement.\n- A remote job restricts applicants to countries/regions that do not include Pakistan.\n- The role is clearly unrelated to the candidate's background.\n\nLOCATION:\n- Worldwide, Global, Anywhere or clearly international remote → Pakistan eligible.\n- If specific countries are listed and Pakistan is excluded → NOT SUITABLE, unless the description explicitly allows applicants from other countries.\n\nEvaluate the actual job description, requirements, experience requirements and location.\nDo not reject based only on the job title.\n\nOUTPUT:\nReturn EXACTLY one value:\nSUITABLE\nor\nNOT SUITABLE\n\nNo explanation or additional text."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2464,
+        -64
+      ],
+      "id": "0d8d24f4-636e-4756-9862-c9ed9c441ab8",
+      "name": "AI Agent",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7e56a94b-41a8-4710-8b51-6dcef2feb185",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "SUITABLE",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        3088,
+        128
+      ],
+      "id": "d9415e87-3513-406e-bb5a-352f05292161",
+      "name": "Filter1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": false
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2816,
+        128
+      ],
+      "id": "bc0b48b0-5b97-4d4f-9d19-f0d4d697ecdc",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI job application assistant.\n\nCreate a professional application package for the candidate using ONLY the job information provided below and the candidate profile.\n\nCANDIDATE PROFILE FROM USER:\n\nCountry: {{ $('Get row(s) in sheet').first().json['Country'] }}\n\nExperience: {{ $('Get row(s) in sheet').first().json['Experience'] }}\n\nSkills: {{ $('Get row(s) in sheet').first().json['Skills'] }}\n\nDesired Roles: {{ $('Get row(s) in sheet').first().json['Desired Roles'] }}\n\nWork Preference: {{ $('Get row(s) in sheet').first().json['Work Preference'] }}\nJOB INFORMATION\n\nJob Title:\n{{ $('Filter1').item.json.title }}\n\nCompany:\n{{ $('Filter1').item.json.company_name }}\n\nCategory:\n{{ $('Filter1').item.json.category }}\n\nTags:\n{{ $('Filter1').item.json.tags }}\n\nJob Description:\n{{ $('Filter1').item.json.description }}\n\nJob URL:\n{{ $('Filter1').item.json.url }}\n\nIMPORTANT RULES\n\n1. Use the actual job description as the primary source.\n2. Do not invent job requirements.\n3. Do not call something a \"requirement\" unless it is explicitly stated or clearly supported by the job posting.\n4. If the job description does not provide enough information, say \"Not specified in the job posting.\"\n5. Do not claim that the candidate has experience they do not have.\n6. Do not exaggerate the candidate's qualifications.\n7. Keep the application professional, truthful and concise.\n8. Mention location/eligibility concerns only when supported by the job posting.\n9. Tailor the application specifically to this job.\n\nGENERATE THE FOLLOWING:\n\n1. WHY THIS JOB MATCHES\nGive 3–5 concise points explaining the genuine connection between the candidate and the job.\n\n2. KEY JOB REQUIREMENTS\nList the important requirements explicitly stated in the job posting.\n\n3. POTENTIAL GAPS\nIdentify requirements from the job posting that the candidate may not fully meet.\nIf there are no clear gaps, say:\n\"No major gap identified from the provided job information.\"\n\n4. SHORT APPLICATION MESSAGE\nWrite a professional 100–150 word application message tailored specifically to this job.\n\n5. PROFESSIONAL COVER LETTER\nWrite a professional cover letter of approximately 250–400 words.\nDo not invent company information, responsibilities or requirements.\n\n6. INTERVIEW PREPARATION\nProvide exactly 3 important points the candidate should prepare for an interview based specifically on this job.\n\nOUTPUT FORMAT\n\n### 1. Why this job matches the candidate\n\n### 2. Key requirements from the job\n\n### 3. Potential gaps\n\n### 4. Short customized application message\n\n### 5. Professional cover letter\n\n### 6. 3 interview points the candidate should prepare\n\nReturn only the application package.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        3536,
+        128
+      ],
+      "id": "56213277-6a58-4433-8a31-a6b97849ec91",
+      "name": "AI Agent1",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        3536,
+        304
+      ],
+      "id": "8fc5a0ad-a5c9-45b5-bd46-f71ec8097e2a",
+      "name": "Google Gemini Chat Model1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "[REDACTED]",
+          "mode": "list",
+          "cachedResultName": "AI Job Hunter – Suitable Jobs",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 234327119,
+          "mode": "list",
+          "cachedResultName": "Application",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Job Title": "={{ $('Filter1').item.json.title }}",
+            "Company": "={{ $('Filter1').item.json.company_name }}",
+            "URL": "={{ $('Filter1').item.json.url }}",
+            "Category": "={{ $('Filter1').item.json.category }}",
+            "Location": "={{ $('Filter1').item.json.candidate_required_location }}",
+            "Job Type": "={{ $('Filter1').item.json.job_type }}",
+            "AI Decision": "=SUITABLE",
+            "Application Package": "={{ $('AI Agent1').item.json.output }}",
+            "Profile ID": "={{ $('Append row in sheet').first().json['Profile ID'] }}"
+          },
+          "matchingColumns": [
+            "URL"
+          ],
+          "schema": [
+            {
+              "id": "Job Title",
+              "displayName": "Job Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Job Type",
+              "displayName": "Job Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Decision",
+              "displayName": "AI Decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Application Package",
+              "displayName": "Application Package",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Profile ID",
+              "displayName": "Profile ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3888,
+        128
+      ],
+      "id": "0cc72dd1-6b25-4458-9ee1-0124b48ac156",
+      "name": "Append or update row in sheet"
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2192,
+        144
+      ],
+      "id": "f8375bf5-d61d-43e2-a6fb-bdbc17118531",
+      "name": "Wait",
+      "webhookId": "[REDACTED]"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1952,
+        128
+      ],
+      "id": "3167a9d9-a8bf-461f-890e-b4723bb0bc7e",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "url": "https://www.arbeitnow.com/api/job-board-api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        64,
+        128
+      ],
+      "id": "b1b36508-d778-4ac1-be1d-9c883566dbb3",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        656,
+        112
+      ],
+      "id": "3ea3f603-fd95-4725-bac7-621a144e3bb4",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -144
+      ],
+      "id": "caaa501e-c697-45e4-be3c-5ed24f84a407",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "maxItems": 3
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        128
+      ],
+      "id": "e964f7dd-7ac5-4ac8-9712-1d0ca6e8b7f4",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        128
+      ],
+      "id": "9b3e4816-2d7e-4496-ba4b-5f262726196f",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        128
+      ],
+      "id": "9dbb4708-209e-4ee2-9526-e77be29186e7",
+      "name": "Remove Duplicates1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "https://jobicy.com/api/v2/remote-jobs?count=200",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -160,
+        384
+      ],
+      "id": "21f3c0d1-1a5c-4ae9-afb9-41cb18ff1359",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "jobs",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        64,
+        384
+      ],
+      "id": "d0face0e-1c5c-4f8a-98bd-3780bb780d76",
+      "name": "Split Out2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ef9ea510-eb4b-4359-8d9f-247930479182",
+              "name": "=title",
+              "value": "={{ $json.jobTitle}}",
+              "type": "string"
+            },
+            {
+              "id": "e9586724-e1fe-4dde-acd1-d443f297e40f",
+              "name": "company_name",
+              "value": "={{ $json.companyName }}",
+              "type": "string"
+            },
+            {
+              "id": "1f7b511b-1677-4a36-843a-1ae943a43586",
+              "name": "category",
+              "value": "={{ $json.jobIndustry }}",
+              "type": "string"
+            },
+            {
+              "id": "892c2d56-5693-4afe-bc70-2227e39a905f",
+              "name": "candidate_required_location",
+              "value": "={{ $json.jobGeo }}",
+              "type": "string"
+            },
+            {
+              "id": "96841417-c3bb-4404-9ae3-26a560737946",
+              "name": "job_type",
+              "value": "={{ $json.jobType }}",
+              "type": "string"
+            },
+            {
+              "id": "9f30af77-e471-4647-92e6-c598e1236cd2",
+              "name": "tags",
+              "value": "={{ [$json.jobIndustry, $json.jobLevel] }}",
+              "type": "string"
+            },
+            {
+              "id": "02ac1be6-679a-4c48-acc4-94b5eb04338c",
+              "name": "description",
+              "value": "={{ $json.jobDescription }}",
+              "type": "string"
+            },
+            {
+              "id": "7006eb02-d12e-4705-a2fd-c4be958c7435",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        352,
+        384
+      ],
+      "id": "d34585f1-c890-4ef8-aed7-fdc5b3eaff48",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2384,
+        96
+      ],
+      "id": "2e1f003f-355b-44b0-9319-29da52e9efaa",
+      "name": "Groq Chat Model"
+    },
+    {
+      "parameters": {
+        "path": "64c65947-705d-45ce-8046-d4f06401be0a",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -656,
+        -160
+      ],
+      "id": "de7bf5a4-97c8-4a25-803a-30f76d1d11d9",
+      "name": "Webhook",
+      "webhookId": "[REDACTED]"
+    },
+    {
+      "parameters": {
+        "model": "google/gemma-4-31b-it:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        96
+      ],
+      "id": "9c0f095d-c664-4241-8a9b-8e1bc221ad98",
+      "name": "OpenRouter Chat Model"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "[REDACTED]",
+          "mode": "list",
+          "cachedResultName": "AI Job Hunter – Profiles",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Profiles",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Profile ID",
+              "lookupValue": "={{ $json['Profile ID'] || $json.query?.profileId || 'default-profile' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        -416
+      ],
+      "id": "6a62b021-7bef-491a-973f-2128f48ce9d5",
+      "name": "Get row(s) in sheet"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "[REDACTED]",
+          "mode": "list",
+          "cachedResultName": "AI Job Hunter – Search Status",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Status",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Search ID": "={{ $json.query?.searchId || 'search-' + Date.now() }}",
+            "Profile ID": "={{ $json.query?.profileId || 'default-profile' }}",
+            "Status": "RUNNING",
+            "Execution ID": "={{ $execution.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Search ID",
+              "displayName": "Search ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Profile ID",
+              "displayName": "Profile ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Execution ID",
+              "displayName": "Execution ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -432,
+        -416
+      ],
+      "id": "c43eabd3-f783-4b85-89bf-af7de6989326",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "[REDACTED]",
+          "mode": "list",
+          "cachedResultName": "AI Job Hunter – Search Status",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Status",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Search ID": "={{ $('Append row in sheet').first().json['Search ID'] }}",
+            "Profile ID": "={{ $('Append row in sheet').first().json['Profile ID'] }}",
+            "Status": "COMPLETED"
+          },
+          "matchingColumns": [
+            "Search ID"
+          ],
+          "schema": [
+            {
+              "id": "Search ID",
+              "displayName": "Search ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Profile ID",
+              "displayName": "Profile ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4128,
+        128
+      ],
+      "id": "0dd5b215-e116-412d-a98a-9259469c00a7",
+      "name": "Update row in sheet"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "88000caa-66e7-4d83-a4ec-358f8b7f4d9d",
+              "leftValue": "={{ $json['output'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3328,
+        128
+      ],
+      "id": "002ef435-a198-49db-b77d-c79fd29ed70c",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates1": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "E9WLGTHKcvUDOhTP",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "9bb8deec-e223-4b3e-b269-63e16f822949",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "da93af29bba3165bc3782f1a1b8e56fad8ee946d08d66e4b0fd48a0448fc3e6f"
+  },
+  "nodeGroups": [],
+  "id": "WuLhjtJXGWoH8y0I",
+  "tags": []
+}

@@ -1,0 +1,146 @@
+{
+  "name": "AI Job Hunter — Save Profile",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "save-profile",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3f6cc7b1-36c9-424b-b20b-c55ee2fb152a",
+      "name": "Webhook",
+      "webhookId": "[REDACTED]"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "[REDACTED]",
+          "mode": "list",
+          "cachedResultName": "AI Job Hunter – Profiles",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Profiles",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Profile ID": "={{ $json.body.profileId }}",
+            "Country": "={{ $json.body.country }}",
+            "Experience": "={{ $json.body.experience }}",
+            "Skills": "={{ $json.body.skills }}",
+            "Desired Roles": "={{ $json.body.roles }}",
+            "Work Preference": "={{ $json.body.workPreference }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Profile ID",
+              "displayName": "Profile ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Experience",
+              "displayName": "Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Desired Roles",
+              "displayName": "Desired Roles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Work Preference",
+              "displayName": "Work Preference",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "10a5980b-8c19-47e5-b9eb-488bd9041885",
+      "name": "Append row in sheet"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9768a127-77fa-43c8-9b72-2c582ebb7f2f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "da93af29bba3165bc3782f1a1b8e56fad8ee946d08d66e4b0fd48a0448fc3e6f"
+  },
+  "nodeGroups": [],
+  "id": "0btdE1Y4Dem1MRmr",
+  "tags": []
+}

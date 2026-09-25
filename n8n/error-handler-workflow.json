@@ -1,0 +1,160 @@
+{
+  "name": "Error Handler workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fc4a80be-d502-4b19-b77b-ed69b4704b04",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "[REDACTED]",
+          "mode": "list",
+          "cachedResultName": "AI Job Hunter – Search Status",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Status",
+          "cachedResultUrl": "[REDACTED]"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Execution ID": "={{ $json.executionId }}",
+            "Status": "FAILED"
+          },
+          "matchingColumns": [
+            "Execution ID"
+          ],
+          "schema": [
+            {
+              "id": "Search ID",
+              "displayName": "Search ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Profile ID",
+              "displayName": "Profile ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Execution ID",
+              "displayName": "Execution ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        0
+      ],
+      "id": "5c9e6b42-8d08-43c6-8d79-fddf5c570842",
+      "name": "Update row in sheet"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\nreturn [\n  {\n    json: {\n      executionId: item.json.execution.id\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0d02b20b-dae8-4ac4-a388-b9ffe5573fcc",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8fdd867b-abb0-453d-93cb-21b58e8d5cf0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "da93af29bba3165bc3782f1a1b8e56fad8ee946d08d66e4b0fd48a0448fc3e6f"
+  },
+  "nodeGroups": [],
+  "id": "E9WLGTHKcvUDOhTP",
+  "tags": []
+}
