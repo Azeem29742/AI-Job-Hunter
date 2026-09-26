@@ -186,24 +186,30 @@
         304
       ],
       "id": "8fc5a0ad-a5c9-45b5-bd46-f71ec8097e2a",
-      "name": "Google Gemini Chat Model1"
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "vqJVjK1B11ISiZZZ",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "appendOrUpdate",
         "documentId": {
           "__rl": true,
-          "value": "[REDACTED]",
+          "value": "19NBlV0g7-eOpYT2gpcaT9AD9KIHuu_ujDKBTV_9CP8s",
           "mode": "list",
           "cachedResultName": "AI Job Hunter – Suitable Jobs",
-          "cachedResultUrl": "[REDACTED]"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19NBlV0g7-eOpYT2gpcaT9AD9KIHuu_ujDKBTV_9CP8s/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": 234327119,
           "mode": "list",
           "cachedResultName": "Application",
-          "cachedResultUrl": "[REDACTED]"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19NBlV0g7-eOpYT2gpcaT9AD9KIHuu_ujDKBTV_9CP8s/edit#gid=234327119"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -325,7 +331,13 @@
         128
       ],
       "id": "0cc72dd1-6b25-4458-9ee1-0124b48ac156",
-      "name": "Append or update row in sheet"
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "J9PCJo4fFiJol88U",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
@@ -339,7 +351,7 @@
       ],
       "id": "f8375bf5-d61d-43e2-a6fb-bdbc17118531",
       "name": "Wait",
-      "webhookId": "[REDACTED]"
+      "webhookId": "b5d94095-461e-4410-b466-0e35c74e8329"
     },
     {
       "parameters": {
@@ -544,7 +556,13 @@
         96
       ],
       "id": "2e1f003f-355b-44b0-9319-29da52e9efaa",
-      "name": "Groq Chat Model"
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "2eYffU1HUZvugbnm",
+          "name": "Groq account"
+        }
+      }
     },
     {
       "parameters": {
@@ -559,7 +577,7 @@
       ],
       "id": "de7bf5a4-97c8-4a25-803a-30f76d1d11d9",
       "name": "Webhook",
-      "webhookId": "[REDACTED]"
+      "webhookId": "64c65947-705d-45ce-8046-d4f06401be0a"
     },
     {
       "parameters": {
@@ -569,27 +587,33 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        2464,
-        96
+        2400,
+        208
       ],
       "id": "9c0f095d-c664-4241-8a9b-8e1bc221ad98",
-      "name": "OpenRouter Chat Model"
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "AN0rx3rgoFIpsXAC",
+          "name": "OpenRouter account"
+        }
+      }
     },
     {
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "[REDACTED]",
+          "value": "1g2iLu1c0sQ_EA1EA9yW7-MQXtq7-QMReUNSuBaUn5N0",
           "mode": "list",
           "cachedResultName": "AI Job Hunter – Profiles",
-          "cachedResultUrl": "[REDACTED]"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1g2iLu1c0sQ_EA1EA9yW7-MQXtq7-QMReUNSuBaUn5N0/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Profiles",
-          "cachedResultUrl": "[REDACTED]"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1g2iLu1c0sQ_EA1EA9yW7-MQXtq7-QMReUNSuBaUn5N0/edit#gid=0"
         },
         "filtersUI": {
           "values": [
@@ -608,24 +632,30 @@
         -416
       ],
       "id": "6a62b021-7bef-491a-973f-2128f48ce9d5",
-      "name": "Get row(s) in sheet"
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "J9PCJo4fFiJol88U",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "[REDACTED]",
+          "value": "1p6wjOaWLEEqEYzElk3i4mNzTumSagI2qW5SltUVMR48",
           "mode": "list",
           "cachedResultName": "AI Job Hunter – Search Status",
-          "cachedResultUrl": "[REDACTED]"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1p6wjOaWLEEqEYzElk3i4mNzTumSagI2qW5SltUVMR48/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Status",
-          "cachedResultUrl": "[REDACTED]"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1p6wjOaWLEEqEYzElk3i4mNzTumSagI2qW5SltUVMR48/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -690,24 +720,30 @@
         -416
       ],
       "id": "c43eabd3-f783-4b85-89bf-af7de6989326",
-      "name": "Append row in sheet"
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "J9PCJo4fFiJol88U",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "update",
         "documentId": {
           "__rl": true,
-          "value": "[REDACTED]",
+          "value": "1p6wjOaWLEEqEYzElk3i4mNzTumSagI2qW5SltUVMR48",
           "mode": "list",
           "cachedResultName": "AI Job Hunter – Search Status",
-          "cachedResultUrl": "[REDACTED]"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1p6wjOaWLEEqEYzElk3i4mNzTumSagI2qW5SltUVMR48/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
           "cachedResultName": "Status",
-          "cachedResultUrl": "[REDACTED]"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1p6wjOaWLEEqEYzElk3i4mNzTumSagI2qW5SltUVMR48/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -772,7 +808,13 @@
         128
       ],
       "id": "0dd5b215-e116-412d-a98a-9259469c00a7",
-      "name": "Update row in sheet"
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "J9PCJo4fFiJol88U",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
@@ -807,6 +849,26 @@
       ],
       "id": "002ef435-a198-49db-b77d-c79fd29ed70c",
       "name": "If"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        2528,
+        336
+      ],
+      "id": "704af26b-1447-4ecf-b6f7-b804795cd09f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "vqJVjK1B11ISiZZZ",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -1096,13 +1158,7 @@
     },
     "OpenRouter Chat Model": {
       "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Append row in sheet": {
@@ -1138,6 +1194,17 @@
           }
         ]
       ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -1149,7 +1216,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "9bb8deec-e223-4b3e-b269-63e16f822949",
+  "versionId": "751cf9c4-1d47-43a7-b124-899c1f3e4634",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "da93af29bba3165bc3782f1a1b8e56fad8ee946d08d66e4b0fd48a0448fc3e6f"
